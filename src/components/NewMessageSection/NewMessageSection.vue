@@ -28,20 +28,35 @@
       />
       <div class="absolute border-b w-[calc(100%-30px)] bottom-0" />
     </div>
+    <div class="relative flex items-center px-3.5 py-2">
+      <p class="text-sm text-gray-700">Timer (sec):</p>
+      <input
+        v-model="timerValue"
+        class="w-full h-6 border-transparent border-none focus:ring-0 outline-none"
+        type="number"
+        min="0"
+      />
+      <div class="absolute border-b w-[calc(100%-30px)] bottom-0" />
+    </div>
     <div class="m-1">
       <textarea
         v-model="emailData.body"
         style="resize: none"
         class="w-full border-transparent border-none focus:ring-0 outline-none"
-        rows="14"
+        rows="10"
       ></textarea>
     </div>
-    <div class="p-4 mt-5">
+
+    <div v-if="showAllDone" class="px-4 text-green-600 font-bold">All done!</div>
+    
+    <div class="p-4 mt-2">
       <button
         @click="sendEmail"
-        class="bg-blue-700 hover:bg-blue-600 text-white text-sm font-bold py-2 px-4 rounded-full"
+        :disabled="isCountingDown"
+        class="bg-blue-700 hover:bg-blue-600 text-white text-sm font-bold py-2 px-4 rounded-full disabled:bg-gray-400"
       >
-        Send message
+        <span v-if="isCountingDown">Sending in {{ timerValue }}s...</span>
+        <span v-else>Send message</span>
       </button>
     </div>
   </div>
@@ -51,7 +66,7 @@
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 import { type ISendEmailData } from '@/shared/types/email'
 import { useUserStore } from '@/stores/user/user-store'
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { emailValidator } from '@/shared/lib/helpers/emailValidator'
 
 const { newMessageOpen } = defineProps<{
@@ -69,17 +84,45 @@ const emailData = reactive<ISendEmailData>({
   body: ''
 })
 
+const timerValue = ref<number>(0)
+const isCountingDown = ref<boolean>(false)
+const showAllDone = ref<boolean>(false)
+
 const sendEmail = async (): Promise<void> => {
   emailValidator(emailData.toEmail)
+
+  if (timerValue.value > 0) {
+    isCountingDown.value = true
+    const interval = setInterval(async () => {
+      timerValue.value--
+      if (timerValue.value <= 0) {
+        clearInterval(interval)
+        await performSend()
+      }
+    }, 1000)
+  } else {
+    await performSend()
+  }
+}
+
+const performSend = async () => {
   await userStore.sendEmail({
     toEmail: emailData.toEmail,
     subject: emailData.subject,
     body: emailData.body
   })
 
-  emit('updateNewMessageOpen', false)
-  emailData.toEmail = ''
-  emailData.subject = ''
-  emailData.body = ''
+  // Show "All done" message
+  isCountingDown.value = false
+  showAllDone.value = true
+
+  setTimeout(() => {
+    emit('updateNewMessageOpen', false)
+    emailData.toEmail = ''
+    emailData.subject = ''
+    emailData.body = ''
+    timerValue.value = 0
+    showAllDone.value = false
+  }, 1000)
 }
 </script>

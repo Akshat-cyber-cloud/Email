@@ -3,12 +3,12 @@
     <div class="border-b">
       <div class="flex items-center justify-between px-1.5 py-0.5">
         <div class="flex">
-          <router-link to="/email">
+          <router-link :to="email.fromEmail === userStore.email ? '/email/sent' : '/email'">
             <base-icon
               iconString="back"
               :iconSize="19"
               iconColor="#636363"
-              text="Back to inbox"
+              :text="email.fromEmail === userStore.email ? 'Back to sent' : 'Back to inbox'"
               hoverColor="hover:bg-gray-100"
             />
           </router-link>
@@ -40,7 +40,9 @@
             <p>{{ email.fromEmail }}</p>
             <p class="mr-5 text-xs font-normal">{{ email.createdAt }}</p>
           </div>
-          <span class="text-xs text-gray-500 font-normal">to me</span>
+          <span class="text-xs text-gray-500 font-normal">
+            to {{ email.toEmail === userStore.email ? 'me' : email.toEmail }}
+          </span>
         </div>
         <p>{{ email.body }}</p>
       </div>

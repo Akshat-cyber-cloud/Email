@@ -29,12 +29,14 @@
         <p class="text-sm pl-4">Snoozed</p>
       </div>
     </div>
-    <div class="flex side-menu-item justify-between px-6 py-1.5">
-      <div class="flex items-center">
-        <send-outline-icon :size="17" />
-        <p class="text-sm pl-4">Sent</p>
+    <router-link to="/email/sent">
+      <div class="flex side-menu-item justify-between px-6 py-1.5">
+        <div class="flex items-center">
+          <send-outline-icon :size="17" />
+          <p class="text-sm pl-4">Sent</p>
+        </div>
       </div>
-    </div>
+    </router-link>
     <div class="flex side-menu-item justify-between px-6 py-1.5">
       <div class="flex items-center">
         <file-outline-icon :size="17" />

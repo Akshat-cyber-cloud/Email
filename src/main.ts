@@ -6,7 +6,6 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 import components from '@/components/UI'
-import vue3GoogleLogin from 'vue3-google-login'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
 const pinia = createPinia()
@@ -19,8 +18,5 @@ components.forEach((c) => {
 
 app.use(pinia)
 app.use(router)
-app.use(vue3GoogleLogin, {
-  clientId: '565535016155-s2ot677uvn5cvfbfor99ukvtaijtjgng.apps.googleusercontent.com'
-})
 
 app.mount('#app')

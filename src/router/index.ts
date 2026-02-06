@@ -25,6 +25,10 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'message/:id',
         component: MessagePage
+      },
+      {
+        path: 'sent',
+        component: () => import('../pages/SentPage.vue')
       }
     ]
   }

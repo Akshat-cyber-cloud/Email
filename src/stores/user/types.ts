@@ -1,3 +1,5 @@
+import { type EmailId } from '@/shared/types/email'
+
 export interface IUserStore {
   sub: string
   email: string
@@ -5,10 +7,11 @@ export interface IUserStore {
   firstName: string
   lastName: string
   emails: IUserEmails[]
+  sentEmails: IUserEmails[]
 }
 
 export interface IUserEmails {
-  id: string
+  id: EmailId
   firstName: string
   lastName: string
   fromEmail: Email
@@ -16,5 +19,5 @@ export interface IUserEmails {
   subject: string
   body: string
   hasViewed: boolean
-  createdAt: DateIso
+  createdAt: string
 }
